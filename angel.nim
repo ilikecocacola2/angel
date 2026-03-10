@@ -1,4 +1,4 @@
-import std/terminal, strutils, strformat
+import std/terminal, strutils
 
 proc banner() =
     stdout.styledWriteLine(fgCyan, """                                           
@@ -35,21 +35,30 @@ proc startup() =
     banner()
 
 proc repl() =
-    echo "enter \"help\" to display help menu"
+  echo "enter \"help\" to display help menu"
 
-    while true:
-        stdout.write("angel > ")
-        stdout.flushFile() 
-        var input = stdin.readLine()
-        var args: seq[string] =  input.splitWhitespace()
-        var command = args[0].toLowerAscii()
+  while true:
+    stdout.write("angel > ")
+    stdout.flushFile()
 
-        if command == "help":
-            commandHelp()
-        elif command == "exit":
-            commandExit()
-        else:
-            stdout.styledWriteLine(fgRed, &"Unknown command \"{command}\"")
+    let raw = stdin.readLine()
+    let input = raw.strip()
+
+    if input.len == 0: continue
+
+    let parts = input.splitWhitespace()
+    if parts.len == 0: continue 
+
+    let cmd = parts[0].toLowerAscii()
+
+    case cmd
+    of "help":
+      commandHelp()
+    of "exit", "quit", "q":
+      commandExit()
+    else:
+      stdout.styledWriteLine(fgRed, "Unknown command: ", cmd)
+
     
 proc ctrlc() {.noconv.} =
     echo "\n"
