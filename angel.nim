@@ -14,7 +14,7 @@ proc banner() =
                      ░░██████                
                       ░░░░░░
                       """)
-    stdout.styledWriteLine(fgCyan, "author: prophetniko")
+    stdout.styledWriteLine(fgYellow, "author: prophetniko")
     
 proc commandHelp() =
     echo """
@@ -22,7 +22,7 @@ proc commandHelp() =
     """
 
 proc commandExit() =
-    stdout.styledWriteLine(fgCyan, "exiting angel, happy hunting!")
+    stdout.styledWriteLine(fgYellow, "exiting angel, happy hunting!")
     quit(0)
 
 proc startup() =
@@ -51,13 +51,17 @@ proc repl() =
 
     let cmd = parts[0].toLowerAscii()
 
+    if input == nil or endOfFile(stdin)
+        commandExit()
+        break
+
     case cmd
     of "help":
       commandHelp()
     of "exit", "quit", "q":
       commandExit()
     else:
-      stdout.styledWriteLine(fgRed, "Unknown command: ", cmd)
+      stdout.styledWriteLine(fgRed, "unknown command: ", cmd)
 
     
 proc ctrlc() {.noconv.} =
